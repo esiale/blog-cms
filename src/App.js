@@ -1,10 +1,13 @@
 import React from 'react';
-import Login from './pages/Login';
+import Login from '/pages/Login';
+import ErrorProvider from '/common/providers/ErrorProvider';
 
 function App() {
   return (
     <>
-      <Login />
+      <ErrorProvider>
+        <Login />
+      </ErrorProvider>
     </>
   );
 }
