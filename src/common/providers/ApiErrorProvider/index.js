@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 
-const ErrorContext = React.createContext({
+const ApiErrorContext = React.createContext({
   error: null,
   addError: () => {},
   removeError: () => {},
 });
 
-const ErrorProvider = ({ children }) => {
+const ApiErrorProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const removeError = () => setError(null);
   const addError = (status, message) => setError({ status, message });
@@ -21,11 +21,11 @@ const ErrorProvider = ({ children }) => {
   );
 
   return (
-    <ErrorContext.Provider value={contextValue}>
+    <ApiErrorContext.Provider value={contextValue}>
       {children}
-    </ErrorContext.Provider>
+    </ApiErrorContext.Provider>
   );
 };
 
-export default ErrorProvider;
-export { ErrorContext };
+export default ApiErrorProvider;
+export { ApiErrorContext };
