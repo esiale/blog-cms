@@ -9,7 +9,7 @@ const ApiErrorContext = React.createContext({
 const ApiErrorProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const removeError = () => setError(null);
-  const addError = (status, message) => setError({ status, message });
+  const addError = (message) => setError(message);
 
   const contextValue = useMemo(
     () => ({

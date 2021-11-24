@@ -8,7 +8,7 @@ const ApiErrorNotification = () => {
 
   return (
     <Modal open={!!error}>
-      <div>{error && error.message}</div>
+      <div>{error}</div>
       <button onClick={handleClick}>Close Modal</button>
     </Modal>
   );

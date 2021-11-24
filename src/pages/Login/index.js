@@ -1,6 +1,7 @@
 import ErrorMessage from './components/ErrorMessage';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import ax from '../../common/config/axios/axiosConfig';
+import { set, useForm } from 'react-hook-form';
+import { error, setError } from '../../common/hooks/useApiError';
 
 const Login = () => {
   const {
@@ -10,18 +11,11 @@ const Login = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      console.log(process.env);
-      const token = await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/login`,
-        {
-          username: data.username,
-          password: data.password,
-        }
-      );
-      console.log(token);
-    } catch (err) {
-      console.log(err.response);
-    }
+      const token = await ax.post(`/user/login`, {
+        username: data.username,
+        password: data.password,
+      });
+    } catch (err) {}
   };
 
   return (
