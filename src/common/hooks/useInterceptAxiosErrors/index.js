@@ -18,7 +18,12 @@ const useInterceptAxiosErrors = () => {
           'There was an error connecting to the API. Please try again later.'
         );
       }
-      if (error.response) addError(error.data);
+      if (error.response) {
+        addError(error.response.data.message);
+        const err = new Error(error.response.data.message);
+        err.status = error.response.status;
+        throw err;
+      }
       Promise.reject(error);
     };
 
