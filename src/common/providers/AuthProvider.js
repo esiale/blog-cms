@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo } from 'react';
+import React, { createContext, useState, useMemo, useCallback } from 'react';
 import ax from '../config/axios/axiosConfig';
 
 const AuthContext = createContext();
@@ -26,14 +26,20 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const checkAuth = () => !!authState.token;
+  const signOut = () => {
+    setAuthState({ user: {}, token: '' });
+    localStorage.clear();
+  };
+
+  const checkAuth = useCallback(() => !!authState.token, [authState.token]);
 
   const contextValue = useMemo(
     () => ({
       signIn,
       checkAuth,
+      signOut,
     }),
-    []
+    [checkAuth]
   );
 
   return (

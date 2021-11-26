@@ -1,18 +1,24 @@
 import ErrorMessage from './components/ErrorMessage';
-import ax from '../../common/config/axios/axiosConfig';
 import useAuth from '../../common/hooks/useAuth';
 import { useForm } from 'react-hook-form';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { signIn } = useAuth();
+  const from = location.state?.from?.pathname || '/';
+
   const onSubmit = async (userInfo) => {
     try {
       await signIn(userInfo);
+      // navigate(from, { replace: true });
+      navigate('/');
     } catch (err) {
       console.error(err);
     }
