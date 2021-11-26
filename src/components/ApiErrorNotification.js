@@ -1,5 +1,5 @@
-import useApiError from '../../common/hooks/useApiError';
-import Modal from '../Modal';
+import useApiError from '../common/hooks/useApiError';
+import Modal from './Modal';
 
 const ApiErrorNotification = () => {
   const { error, removeError } = useApiError();

@@ -1,5 +1,5 @@
-import React, { createContext, useState, useMemo, useEffect } from 'react';
-import ax from '../../config/axios/axiosConfig';
+import React, { createContext, useState, useMemo } from 'react';
+import ax from '../config/axios/axiosConfig';
 
 const AuthContext = createContext();
 
@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
   const signIn = async (userInfo) => {
     try {
-      const { data } = await ax.post('/user/login', userInfo);
+      const { data } = await ax.post('/auth/login', userInfo);
       const { user } = data;
       const { token } = data;
       localStorage.setItem('user', JSON.stringify(user));
@@ -26,18 +26,12 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const user = {
-      _id: authState._id,
-      username: authState.username,
-      role: authState.role,
-    };
-    const { token } = authState;
-  });
+  const checkAuth = () => !!authState.token;
 
   const contextValue = useMemo(
     () => ({
       signIn,
+      checkAuth,
     }),
     []
   );

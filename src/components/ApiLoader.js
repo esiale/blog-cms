@@ -1,4 +1,4 @@
-import useInterceptAxiosErrors from '../../common/hooks/useInterceptAxiosErrors';
+import useInterceptAxiosErrors from '../common/hooks/useInterceptAxiosErrors';
 
 const ApiLoader = () => {
   const [loading] = useInterceptAxiosErrors();

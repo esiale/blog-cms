@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import useApiError from '../useApiError';
-import ax from '../../config/axios/axiosConfig';
+import useApiError from './useApiError';
+import ax from '../config/axios/axiosConfig';
 
 const useInterceptAxiosErrors = () => {
   const [counter, setCounter] = useState(0);
