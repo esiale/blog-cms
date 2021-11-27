@@ -17,8 +17,7 @@ const Login = () => {
   const onSubmit = async (userInfo) => {
     try {
       await signIn(userInfo);
-      // navigate(from, { replace: true });
-      navigate('/');
+      navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
     }
