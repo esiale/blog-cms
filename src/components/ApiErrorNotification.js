@@ -1,5 +1,5 @@
 import useApiError from '../common/hooks/useApiError';
-import Modal from './Modal';
+import Portal from './Portal';
 import { useEffect, useRef } from 'react';
 import { Transition } from '@headlessui/react';
 
@@ -21,10 +21,10 @@ const ApiErrorNotification = () => {
   }, [error]);
 
   return (
-    <Modal>
+    <Portal>
       <Transition
         show={!!error}
-        class="fixed top-10"
+        class="fixed top-5 left-2/4 transform -translate-x-1/2"
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
         enterTo="opacity-100"
@@ -35,7 +35,7 @@ const ApiErrorNotification = () => {
         {error ?? errorRef.current}
         <button onClick={handleClick}>Close Modal</button>
       </Transition>
-    </Modal>
+    </Portal>
   );
 };
 
