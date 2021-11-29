@@ -21,22 +21,28 @@ const useInterceptAxiosErrors = () => {
       } else {
         addError('There was an error setting up the request.');
       }
-      Promise.reject(error);
+      return Promise.reject(error);
     };
 
     const requestError = (error) => {
       dec();
       addError('There was an error handling the request.');
-      Promise.reject(error);
+      return Promise.reject(error);
     };
 
     return {
-      request: (config) => (inc(), config),
-      response: (response) => (dec(), response),
+      request: (config) => {
+        inc();
+        return config;
+      },
+      response: (response) => {
+        dec();
+        return response;
+      },
       responseError,
       requestError,
     };
-  }, []);
+  }, [addError]);
 
   useEffect(() => {
     const reqInterceptor = ax.interceptors.request.use(

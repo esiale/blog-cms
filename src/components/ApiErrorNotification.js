@@ -18,6 +18,7 @@ const ApiErrorNotification = () => {
   });
 
   useEffect(() => {
+    if (errorRef.current) return;
     errorRef.current = error;
   }, [error]);
 
@@ -37,9 +38,11 @@ const ApiErrorNotification = () => {
           <img className="w-8 h-8" src={alertIcon} alt="Warning icon" />
           An error has occured!
         </div>
-        <div className="px-4 py-4 text-center">{error ?? errorRef.current}</div>
+        <div className="bg-white px-4 py-4 text-center">
+          {error ?? errorRef.current}
+        </div>
         <button
-          className="w-full px-4 py-1.5 bg-gray-100"
+          className="cursor-pointer w-full px-4 py-1.5 bg-gray-100"
           onClick={handleClick}
         >
           Dismiss

@@ -50,7 +50,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      transform: ['focus'],
+    },
   },
   plugins: [],
 };
