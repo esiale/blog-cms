@@ -1,12 +1,12 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import useAuth from '../common/hooks/useAuth';
 
-const PrivateRoute = ({ children }) => {
+const RequireAuth = () => {
   const { checkAuth } = useAuth();
   const location = useLocation();
 
   if (!checkAuth()) return <Navigate to="/login" state={{ from: location }} />;
-  return children;
+  return <Outlet />;
 };
 
-export default PrivateRoute;
+export default RequireAuth;

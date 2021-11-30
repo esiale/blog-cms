@@ -1,10 +1,12 @@
 import React from 'react';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
 import ApiErrorProvider from './common/providers/ApiErrorProvider';
 import ApiErrorNotification from './components/ApiErrorNotification';
 import ApiLoader from './components/ApiLoader';
-import PrivateRoute from './routes/PrivateRoute';
+import RequireAuth from './routes/RequireAuth';
+import secureRoutes from './routes/secureRoutes';
+import Layout from './pages/Layout';
+import uniqid from 'uniqid';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './common/providers/AuthProvider';
 
@@ -15,14 +17,13 @@ function App() {
         <ApiLoader />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/" element={<RequireAuth />}>
+            <Route path="/" element={<Layout />}>
+              {secureRoutes.map(({ path, element }) => {
+                return <Route path={path} element={element} key={uniqid()} />;
+              })}
+            </Route>
+          </Route>
         </Routes>
         <ApiErrorNotification />
       </ApiErrorProvider>

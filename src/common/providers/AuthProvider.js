@@ -14,8 +14,8 @@ const AuthProvider = ({ children }) => {
       const { data } = await ax.post('/auth/login', userInfo);
       const { user } = data;
       const { token } = data;
-      localStorage.setItem('user', JSON.stringify(data.data.user));
-      localStorage.setItem('token', data.data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
       setAuthState({
         user,
         token,
