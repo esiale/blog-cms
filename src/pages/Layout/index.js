@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    <div className="h-full flex flex-col justify-between">
+    <div className="h-full bg-gray-50 flex flex-col justify-between p-5">
       <Header />
       <Outlet />
       <Footer />

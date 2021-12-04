@@ -14,7 +14,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const { signIn } = useAuth();
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/posts';
 
   const onSubmit = async (userInfo) => {
     try {

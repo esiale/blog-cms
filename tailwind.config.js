@@ -9,11 +9,11 @@ module.exports = {
       colors: {
         'spun-pearl': {
           DEFAULT: '#AAABBC',
-          50: '#FFFFFF',
-          100: '#FFFFFF',
-          200: '#EEEFF2',
-          300: '#D8D8E0',
-          400: '#C1C2CE',
+          50: '#F7F7F9',
+          100: '#EEEFF2',
+          200: '#DDDEE4',
+          300: '#CCCDD7',
+          400: '#BBBCC9',
           500: '#AAABBC',
           600: '#8B8CA3',
           700: '#6C6E89',
