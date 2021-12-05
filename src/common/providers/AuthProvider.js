@@ -1,5 +1,11 @@
-import React, { createContext, useState, useMemo, useCallback } from 'react';
-import ax from '../config/axios/axiosConfig';
+import React, {
+  createContext,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
+import { ax, setApiToken } from '../config/axios/axiosConfig';
 
 const AuthContext = createContext();
 
@@ -8,6 +14,10 @@ const AuthProvider = ({ children }) => {
     user: JSON.parse(localStorage.getItem('user')) || {},
     token: localStorage.getItem('token') || '',
   });
+
+  useEffect(() => {
+    setApiToken(authState.token);
+  }, [authState]);
 
   const signIn = async (userInfo) => {
     try {
@@ -38,8 +48,9 @@ const AuthProvider = ({ children }) => {
       signIn,
       checkAuth,
       signOut,
+      authState,
     }),
-    [checkAuth]
+    [checkAuth, authState]
   );
 
   return (

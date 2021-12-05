@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
+import { ax } from '../config/axios/axiosConfig';
 import useApiError from './useApiError';
-import ax from '../config/axios/axiosConfig';
 
 const useInterceptAxiosErrors = () => {
   const [counter, setCounter] = useState(0);
@@ -13,7 +13,7 @@ const useInterceptAxiosErrors = () => {
     const responseError = (error) => {
       dec();
       if (error.response) {
-        addError(error.response.data.message);
+        addError(error.response.data.message || error.response.statusText);
       } else if (error.request) {
         addError(
           'There was an error connecting to the API. Please try again later.'

@@ -18,7 +18,6 @@ const ApiErrorNotification = () => {
   });
 
   useEffect(() => {
-    if (errorRef.current) return;
     errorRef.current = error;
   }, [error]);
 

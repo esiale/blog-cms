@@ -1,10 +1,16 @@
 import MDEditor from '@uiw/react-md-editor';
+import useApiError from '../../../common/hooks/useApiError';
+import useAuth from '../../../common/hooks/useAuth';
+import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
 const NewPost = () => {
-  const [value, setValue] = useState('');
+  const [body, setBody] = useState('');
+  const [title, setTitle] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('edit');
+  const { authState } = useAuth();
+  const { addError } = useApiError();
   const breakpoint = 1024;
 
   useEffect(() => {
@@ -14,6 +20,28 @@ const NewPost = () => {
       window.removeEventListener('resize', handleResizeWindow);
     };
   }, []);
+
+  const validatePost = () => {
+    if (!title.trim().length || !body.trim().length) {
+      addError('Please fill out all fields.');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const saveAsDraft = async () => {
+    if (!validatePost()) return;
+    try {
+      ax.post('/posts/', {
+        author: authState.user._id,
+        title: title,
+        body: body,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="h-full mt-4 p-2 md:p-16 md:mt-0">
@@ -40,12 +68,13 @@ const NewPost = () => {
           type="text"
           placeholder="Title"
           className="border border-gray-200 rounded px-2 py-1 w-full max-w-xl focus:outline-none focus:border-ship-cove-400"
+          onChange={(e) => setTitle(e.target.value)}
         />
       </div>
       {view === 'edit' ? (
         <MDEditor
-          value={value}
-          onChange={setValue}
+          value={body}
+          onChange={setBody}
           height={560}
           preview={width < breakpoint ? 'edit' : 'live'}
           commandsFilter={(cmd) => {
@@ -57,10 +86,11 @@ const NewPost = () => {
           }}
         />
       ) : (
-        <MDEditor.Markdown source={value} />
+        <MDEditor.Markdown source={body} />
       )}
       <div className="flex gap-2 my-4">
         <button
+          onClick={saveAsDraft}
           className={
             'h-9 w-32 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out'
           }

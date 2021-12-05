@@ -5,5 +5,8 @@ const ax = axios.create({
 });
 
 ax.defaults.headers.post['Content-Type'] = 'application/json';
+const setApiToken = (token) => {
+  ax.defaults.headers.common['Authorization'] = `bearer ${token}`;
+};
 
-export default ax;
+export { ax, setApiToken };
