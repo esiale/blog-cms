@@ -21,7 +21,7 @@ const NewPost = () => {
         <div className="flex gap-2 justify-end sm:order-1">
           <button
             onClick={() => setView('edit')}
-            className={`w-20 p-1 rounded-sm text-white font-bold ${
+            className={`h-9 w-20 p-1 rounded-sm text-white font-bold ${
               view === 'edit' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
             }`}
           >
@@ -29,7 +29,7 @@ const NewPost = () => {
           </button>
           <button
             onClick={() => setView('preview')}
-            className={`w-20 p-1 rounded-sm text-white font-bold ${
+            className={`h-9 w-20 p-1 rounded-sm text-white font-bold ${
               view === 'preview' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
             }`}
           >
@@ -39,14 +39,14 @@ const NewPost = () => {
         <input
           type="text"
           placeholder="Title"
-          className="border border-gray-200 rounded px-2 py-1 w-full max-w-xl"
+          className="border border-gray-200 rounded px-2 py-1 w-full max-w-xl focus:outline-none focus:border-ship-cove-400"
         />
       </div>
       {view === 'edit' ? (
         <MDEditor
           value={value}
           onChange={setValue}
-          height={600}
+          height={560}
           preview={width < breakpoint ? 'edit' : 'live'}
           commandsFilter={(cmd) => {
             if (width > breakpoint) return cmd;
@@ -59,6 +59,22 @@ const NewPost = () => {
       ) : (
         <MDEditor.Markdown source={value} />
       )}
+      <div className="flex gap-2 my-4">
+        <button
+          className={
+            'h-9 w-32 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out'
+          }
+        >
+          Save as a draft
+        </button>
+        <button
+          className={
+            'h-9 w-28 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out'
+          }
+        >
+          Continue
+        </button>
+      </div>
     </div>
   );
 };
