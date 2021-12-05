@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from './pages/Login';
-import ApiErrorProvider from './common/providers/ApiErrorProvider';
 import ApiErrorNotification from './components/ApiErrorNotification';
+import SuccessNotification from './components/SuccessNotification';
 import ApiLoader from './components/ApiLoader';
 import RequireAuth from './routes/RequireAuth';
 import secureRoutes from './routes/secureRoutes';
@@ -9,11 +9,12 @@ import Layout from './pages/Layout';
 import uniqid from 'uniqid';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './common/providers/AuthProvider';
+import { ModalProvider } from './common/providers/ModalProvider';
 
 function App() {
   return (
     <AuthProvider>
-      <ApiErrorProvider>
+      <ModalProvider>
         <ApiLoader />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -26,7 +27,8 @@ function App() {
           </Route>
         </Routes>
         <ApiErrorNotification />
-      </ApiErrorProvider>
+        <SuccessNotification />
+      </ModalProvider>
     </AuthProvider>
   );
 }

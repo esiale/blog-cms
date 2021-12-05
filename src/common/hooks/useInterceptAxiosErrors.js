@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { ax } from '../config/axios/axiosConfig';
-import useApiError from './useApiError';
+import useModal from './useModal';
 
 const useInterceptAxiosErrors = () => {
   const [counter, setCounter] = useState(0);
-  const { addError } = useApiError();
+  const { addMessage } = useModal();
 
   const interceptors = useMemo(() => {
     const inc = () => setCounter((counter) => counter + 1);
@@ -13,20 +13,31 @@ const useInterceptAxiosErrors = () => {
     const responseError = (error) => {
       dec();
       if (error.response) {
-        addError(error.response.data.message || error.response.statusText);
+        addMessage({
+          type: 'error',
+          message: error.response.data.message || error.response.statusText,
+        });
       } else if (error.request) {
-        addError(
-          'There was an error connecting to the API. Please try again later.'
-        );
+        addMessage({
+          type: 'error',
+          message:
+            'There was an error connecting to the API. Please try again later.',
+        });
       } else {
-        addError('There was an error setting up the request.');
+        addMessage({
+          type: 'error',
+          message: 'There was an error setting up the request.',
+        });
       }
       return Promise.reject(error);
     };
 
     const requestError = (error) => {
       dec();
-      addError('There was an error handling the request.');
+      addMessage({
+        type: 'error',
+        message: 'There was an error handling the request.',
+      });
       return Promise.reject(error);
     };
 
@@ -42,7 +53,7 @@ const useInterceptAxiosErrors = () => {
       responseError,
       requestError,
     };
-  }, [addError]);
+  }, [addMessage]);
 
   useEffect(() => {
     const reqInterceptor = ax.interceptors.request.use(

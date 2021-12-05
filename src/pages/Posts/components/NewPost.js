@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor';
-import useApiError from '../../../common/hooks/useApiError';
+import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
@@ -9,8 +9,8 @@ const NewPost = () => {
   const [title, setTitle] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('edit');
+  const { addMessage } = useModal();
   const { authState } = useAuth();
-  const { addError } = useApiError();
   const breakpoint = 1024;
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const NewPost = () => {
 
   const validatePost = () => {
     if (!title.trim().length || !body.trim().length) {
-      addError('Please fill out all fields.');
+      addMessage({ type: 'error', message: 'Please fill out all fields.' });
       return false;
     } else {
       return true;
@@ -38,6 +38,7 @@ const NewPost = () => {
         title: title,
         body: body,
       });
+      addMessage({ type: 'success', message: 'Your draft has been saved.' });
     } catch (err) {
       console.error(err);
     }
