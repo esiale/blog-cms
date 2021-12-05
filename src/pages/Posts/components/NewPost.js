@@ -17,23 +17,30 @@ const NewPost = () => {
 
   return (
     <div className="h-full mt-4 p-2 md:p-16 md:mt-0">
-      <div className="flex justify-end align-center gap-2 mb-4">
-        <button
-          onClick={() => setView('edit')}
-          className={`w-20 p-1 rounded-sm text-white font-bold ${
-            view === 'edit' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
-          }`}
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => setView('preview')}
-          className={`w-20 p-1 rounded-sm text-white font-bold ${
-            view === 'preview' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
-          }`}
-        >
-          Preview
-        </button>
+      <div className="flex justify-between align-center mb-4 gap-4 flex-col sm:flex-row">
+        <div className="flex gap-2 justify-end sm:order-1">
+          <button
+            onClick={() => setView('edit')}
+            className={`w-20 p-1 rounded-sm text-white font-bold ${
+              view === 'edit' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
+            }`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setView('preview')}
+            className={`w-20 p-1 rounded-sm text-white font-bold ${
+              view === 'preview' ? 'bg-ship-cove-500' : 'bg-ship-cove-200'
+            }`}
+          >
+            Preview
+          </button>
+        </div>
+        <input
+          type="text"
+          placeholder="Title"
+          className="border border-gray-200 rounded px-2 py-1 w-full max-w-xl"
+        />
       </div>
       {view === 'edit' ? (
         <MDEditor
