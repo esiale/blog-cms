@@ -4,9 +4,11 @@ import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    <div className="h-full bg-gray-50 flex flex-col justify-between py-2 px-5">
+    <div className="h-full flex flex-col justify-between mx-5">
       <Header />
-      <Outlet />
+      <main className="h-full md:pt-16 pt-4">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-col gap-5">
+    <header className="flex flex-col gap-5 pt-2">
       <div className="grid grid-cols-3 items-center">
         <span className="col-start-1 text-xl text-ship-cove-600">BlogCMS</span>
         <nav

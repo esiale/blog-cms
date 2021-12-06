@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .btn-hover {
+    @apply h-9 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out;
+  }
+}

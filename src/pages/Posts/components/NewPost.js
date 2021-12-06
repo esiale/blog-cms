@@ -1,6 +1,7 @@
 import MDEditor from '@uiw/react-md-editor';
 import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
+import CropImage from './CropImage';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -9,6 +10,10 @@ const NewPost = () => {
   const [title, setTitle] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('edit');
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [showCropImage, setShowCropImage] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const { addMessage } = useModal();
   const { authState } = useAuth();
   const breakpoint = 1024;
@@ -33,19 +38,73 @@ const NewPost = () => {
   const saveAsDraft = async () => {
     if (!validatePost()) return;
     try {
-      // ax.post('/posts/', {
-      //   author: authState.user._id,
-      //   title: title,
-      //   body: body,
-      // });
+      ax.post('/posts/', {
+        author: authState.user._id,
+        title: title,
+        body: body,
+      });
       addMessage({ type: 'success', message: 'Your draft has been saved.' });
     } catch (err) {
       console.error(err);
     }
   };
 
+  const readFile = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => resolve(reader.result), false);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const onFileChange = async (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      let imageDataUrl = await readFile(file);
+      setImageSrc(imageDataUrl);
+      setShowCropImage(true);
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setShowPreview(false);
+    setImageSrc(null);
+    setCroppedImage(null);
+  };
+
+  if (showPreview)
+    return (
+      <div className="flex flex-col gap-5 items-center">
+        <img
+          className="lg:w-1/2 shadow rounded"
+          src={croppedImage}
+          alt="Cropped uploaded"
+        />
+        <div className="flex gap-2 self-start">
+          <button
+            className="btn-hover w-24"
+            onClick={() => setShowPreview(false)}
+          >
+            Go back
+          </button>
+          <button className="btn-hover w-24" onClick={handleDeleteImage}>
+            Delete
+          </button>
+        </div>
+      </div>
+    );
+
+  if (showCropImage)
+    return (
+      <CropImage
+        imageSrc={imageSrc}
+        setCroppedImage={setCroppedImage}
+        setShowCropImage={setShowCropImage}
+      />
+    );
+
   return (
-    <div className="h-full mt-4 p-2 md:p-16 md:mt-0">
+    <div>
       <div className="flex justify-between align-center mb-4 gap-4 flex-col sm:flex-row">
         <div className="flex gap-2 justify-end sm:order-1">
           <button
@@ -90,21 +149,30 @@ const NewPost = () => {
         <MDEditor.Markdown source={body} />
       )}
       <div className="flex gap-2 my-4">
-        <button
-          onClick={saveAsDraft}
-          className={
-            'h-9 w-32 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out'
-          }
-        >
+        <button onClick={saveAsDraft} className={'btn-hover w-32'}>
           Save as a draft
         </button>
-        <button
-          className={
-            'h-9 w-28 p-1 rounded-sm text-white font-bold bg-ship-cove-500 hover:bg-ship-cove-600 transition-colors duration-200 ease-in-out'
-          }
+        <input
+          type="file"
+          id="upload-btn"
+          onChange={onFileChange}
+          accept="image/*"
+          hidden
+        />
+        <label
+          className={'btn-hover w-32 flex items-center justify-center'}
+          for="upload-btn"
         >
-          Continue
-        </button>
+          Upload Image
+        </label>
+        {croppedImage ? (
+          <button
+            className={'btn-hover w-32'}
+            onClick={() => setShowPreview(true)}
+          >
+            Preview Image
+          </button>
+        ) : null}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer>
       <a
-        className="text-lg flex justify-center items-center gap-2"
+        className="text-lg flex justify-center items-center gap-2 py-3"
         href="https://github.com/esiale"
         target="_blank"
         rel="noreferrer"
