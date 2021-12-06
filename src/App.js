@@ -1,7 +1,6 @@
 import React from 'react';
 import Login from './pages/Login';
-import ApiErrorNotification from './components/ApiErrorNotification';
-import SuccessNotification from './components/SuccessNotification';
+import Notification from './components/Notification';
 import ApiLoader from './components/ApiLoader';
 import RequireAuth from './routes/RequireAuth';
 import secureRoutes from './routes/secureRoutes';
@@ -26,8 +25,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
-        <ApiErrorNotification />
-        <SuccessNotification />
+        <Notification />
       </ModalProvider>
     </AuthProvider>
   );

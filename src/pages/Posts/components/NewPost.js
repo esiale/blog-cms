@@ -33,11 +33,11 @@ const NewPost = () => {
   const saveAsDraft = async () => {
     if (!validatePost()) return;
     try {
-      ax.post('/posts/', {
-        author: authState.user._id,
-        title: title,
-        body: body,
-      });
+      // ax.post('/posts/', {
+      //   author: authState.user._id,
+      //   title: title,
+      //   body: body,
+      // });
       addMessage({ type: 'success', message: 'Your draft has been saved.' });
     } catch (err) {
       console.error(err);
