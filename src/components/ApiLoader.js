@@ -7,7 +7,7 @@ const ApiLoader = () => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (!loading) return;
+    if (!loading) return setShow(false);
     const timeout = setTimeout(() => {
       setShow(true);
     }, 1000);

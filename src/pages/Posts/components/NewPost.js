@@ -2,6 +2,7 @@ import MDEditor from '@uiw/react-md-editor';
 import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
 import CropImage from './CropImage';
+import getSignedRequest from '../../../common/utils/uploadImageUtils';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -10,8 +11,7 @@ const NewPost = () => {
   const [title, setTitle] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('edit');
-  const [croppedImage, setCroppedImage] = useState(null);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [showCropImage, setShowCropImage] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const { addMessage } = useModal();
@@ -30,6 +30,9 @@ const NewPost = () => {
     if (!title.trim().length || !body.trim().length) {
       addMessage({ type: 'error', message: 'Please fill out all fields.' });
       return false;
+    } else if (!imageData) {
+      addMessage({ type: 'error', message: 'Image is required.' });
+      return false;
     } else {
       return true;
     }
@@ -38,10 +41,12 @@ const NewPost = () => {
   const saveAsDraft = async () => {
     if (!validatePost()) return;
     try {
-      ax.post('/posts/', {
+      const imageUrl = await getSignedRequest(imageData);
+      await ax.post('/posts/', {
         author: authState.user._id,
         title: title,
         body: body,
+        imageUrl: imageUrl,
       });
       addMessage({ type: 'success', message: 'Your draft has been saved.' });
     } catch (err) {
@@ -60,16 +65,19 @@ const NewPost = () => {
   const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      let imageDataUrl = await readFile(file);
-      setImageSrc(imageDataUrl);
+      let image = await readFile(file);
+      setImageData({
+        name: file.name,
+        type: file.type,
+        image,
+      });
       setShowCropImage(true);
     }
   };
 
   const handleDeleteImage = () => {
     setShowPreview(false);
-    setImageSrc(null);
-    setCroppedImage(null);
+    setImageData(null);
   };
 
   if (showPreview)
@@ -77,7 +85,7 @@ const NewPost = () => {
       <div className="flex flex-col gap-5 items-center">
         <img
           className="lg:w-1/2 shadow rounded"
-          src={croppedImage}
+          src={imageData.image}
           alt="Cropped uploaded"
         />
         <div className="flex gap-2 self-start">
@@ -97,8 +105,8 @@ const NewPost = () => {
   if (showCropImage)
     return (
       <CropImage
-        imageSrc={imageSrc}
-        setCroppedImage={setCroppedImage}
+        imageData={imageData}
+        setImageData={setImageData}
         setShowCropImage={setShowCropImage}
       />
     );
@@ -165,7 +173,7 @@ const NewPost = () => {
         >
           Upload Image
         </label>
-        {croppedImage ? (
+        {imageData ? (
           <button
             className={'btn-hover w-32'}
             onClick={() => setShowPreview(true)}

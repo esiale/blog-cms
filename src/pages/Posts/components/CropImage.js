@@ -7,7 +7,7 @@ const CropImage = (props) => {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
-  const { imageSrc, setCroppedImage, setShowCropImage } = props;
+  const { imageData, setImageData, setShowCropImage } = props;
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -15,16 +15,22 @@ const CropImage = (props) => {
 
   const processImage = useCallback(async () => {
     try {
-      const croppedImage = await getCroppedImage(imageSrc, croppedAreaPixels);
-      setCroppedImage(croppedImage);
+      const croppedImage = await getCroppedImage(
+        imageData.image,
+        croppedAreaPixels
+      );
+      setImageData((prev) => ({
+        ...prev,
+        image: croppedImage,
+      }));
       setShowCropImage(false);
     } catch (e) {
       console.error(e);
     }
-  }, [imageSrc, croppedAreaPixels, setCroppedImage, setShowCropImage]);
+  }, [imageData, croppedAreaPixels, setImageData, setShowCropImage]);
 
   const goBack = () => {
-    setCroppedImage(null);
+    setImageData(null);
     setShowCropImage(false);
   };
 
@@ -32,7 +38,7 @@ const CropImage = (props) => {
     <div className="h-full flex flex-col gap-5">
       <div className="h-1/4 sm:h-1/2 lg:h-2/3 xl:h-full relative">
         <Cropper
-          image={imageSrc}
+          image={imageData.image}
           crop={crop}
           zoom={zoom}
           aspect={4 / 3}
