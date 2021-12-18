@@ -56,6 +56,21 @@ const NewPost = () => {
 
   const readFile = (file) => {
     return new Promise((resolve) => {
+      if (file.size > 5242880) {
+        return addMessage({
+          type: 'error',
+          message: 'File is larger than 5mbs.',
+        });
+      } else if (
+        file.type !== 'image/png' ||
+        file.type !== 'image/jpg' ||
+        file.type !== 'image/jpeg'
+      ) {
+        return addMessage({
+          type: 'error',
+          message: 'Accepted file types are: PNG, JPG and JPEG.',
+        });
+      }
       const reader = new FileReader();
       reader.addEventListener('load', () => resolve(reader.result), false);
       reader.readAsDataURL(file);
@@ -69,6 +84,7 @@ const NewPost = () => {
       setImageData({
         name: file.name,
         type: file.type,
+        size: file.size,
         image,
       });
       setShowCropImage(true);

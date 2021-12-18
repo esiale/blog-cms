@@ -15,10 +15,11 @@ const uploadFile = async (file, fileName, signedRequest, url) => {
 };
 
 const getSignedRequest = async (file) => {
-  const response = await ax.get(`/sign-s3?file-type=${file.type}`);
+  const response = await ax.get(
+    `/sign-s3?file-type=${file.type}&file-size=${file.size}`
+  );
   const imageUrl = await uploadFile(
     file,
-    response.data.fileName,
     response.data.signedRequest,
     response.data.url
   );
