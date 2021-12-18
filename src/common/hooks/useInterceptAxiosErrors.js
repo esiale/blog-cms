@@ -12,7 +12,6 @@ const useInterceptAxiosErrors = () => {
 
     const responseError = (error) => {
       dec();
-      console.log(error.response);
       if (error.response) {
         addMessage({
           type: 'error',

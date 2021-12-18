@@ -62,8 +62,8 @@ const NewPost = () => {
           message: 'File is larger than 5mbs.',
         });
       } else if (
-        file.type !== 'image/png' ||
-        file.type !== 'image/jpg' ||
+        file.type !== 'image/png' &&
+        file.type !== 'image/jpg' &&
         file.type !== 'image/jpeg'
       ) {
         return addMessage({
@@ -185,7 +185,7 @@ const NewPost = () => {
         />
         <label
           className={'btn-hover w-32 flex items-center justify-center'}
-          for="upload-btn"
+          htmlFor="upload-btn"
         >
           Upload Image
         </label>
