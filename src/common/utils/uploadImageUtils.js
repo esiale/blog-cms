@@ -1,29 +1,51 @@
 import { ax } from '../config/axios/axiosConfig';
+import { v4 as uuidv4 } from 'uuid';
 
-const uploadFile = async (file, fileName, signedRequest, url) => {
-  const blob = await fetch(file.image).then((result) => {
-    return result.blob();
+const getLocationFromXmlResponse = (response) => {
+  const parser = new DOMParser();
+  const parsedResponse = parser.parseFromString(response.data, 'text/xml');
+  const location =
+    parsedResponse.getElementsByTagName('Location')[0].childNodes[0].nodeValue;
+  return location;
+};
+
+const uploadFileToS3 = async (presignedPostData, file) => {
+  const formData = new FormData();
+  Object.keys(presignedPostData.data.fields).forEach((key) => {
+    formData.append(key, presignedPostData.data.fields[key]);
   });
-  const imageFromBlob = new File([blob], fileName);
-  await ax.put(signedRequest, imageFromBlob, {
+  formData.append('file', file);
+  return ax.post(presignedPostData.data.url, formData, {
     transformRequest: (data, headers) => {
       delete headers.common['Authorization'];
       return data;
     },
   });
-  return url;
 };
 
-const getSignedRequest = async (file) => {
-  const response = await ax.get(
-    `/sign-s3?file-type=${file.type}&file-size=${file.size}`
-  );
-  const imageUrl = await uploadFile(
-    file,
-    response.data.signedRequest,
-    response.data.url
-  );
-  return imageUrl;
+const getPresignedPostData = async (file) => {
+  return ax.post('sign-s3', {
+    name: file.name,
+    type: file.type,
+  });
 };
 
-export default getSignedRequest;
+const convertBlobUrlToFile = async (file) => {
+  const blob = await fetch(file).then((result) => {
+    return result.blob();
+  });
+  const fileName = uuidv4();
+  return new File([blob], fileName, {
+    type: blob.type,
+  });
+};
+
+const processFileUpload = async (file) => {
+  const fileToUpload = await convertBlobUrlToFile(file);
+  const presignedPostData = await getPresignedPostData(fileToUpload);
+  const response = await uploadFileToS3(presignedPostData, fileToUpload);
+  const location = getLocationFromXmlResponse(response);
+  return location;
+};
+
+export default processFileUpload;

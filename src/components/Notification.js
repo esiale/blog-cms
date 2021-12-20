@@ -46,7 +46,7 @@ const Notification = () => {
             An error has occured!
           </div>
         )}
-        <div className="bg-white px-4 py-4 text-center">
+        <div className="bg-white w-full px-4 py-4 text-center">
           {message?.message ?? messageRef.current?.message}
         </div>
         <button

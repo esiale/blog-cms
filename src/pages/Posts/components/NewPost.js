@@ -2,7 +2,7 @@ import MDEditor from '@uiw/react-md-editor';
 import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
 import CropImage from './CropImage';
-import getSignedRequest from '../../../common/utils/uploadImageUtils';
+import processFileUpload from '../../../common/utils/uploadImageUtils';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -41,12 +41,12 @@ const NewPost = () => {
   const saveAsDraft = async () => {
     if (!validatePost()) return;
     try {
-      const imageUrl = await getSignedRequest(imageData);
+      const location = await processFileUpload(imageData.image);
       await ax.post('/posts/', {
         author: authState.user._id,
         title: title,
         body: body,
-        imageUrl: imageUrl,
+        imageUrl: location,
       });
       addMessage({ type: 'success', message: 'Your draft has been saved.' });
     } catch (err) {
@@ -152,6 +152,7 @@ const NewPost = () => {
           type="text"
           placeholder="Title"
           className="border border-gray-200 rounded px-2 py-1 w-full max-w-xl focus:outline-none focus:border-ship-cove-400"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
