@@ -55,7 +55,7 @@ const Login = () => {
           <ErrorMessage error={'Password must be 6 characters or more.'} />
         )}
         <input
-          className="mt-7 p-2 bg-ship-cove-500 rounded-sm text-white font-bold hover:bg-ship-cove-700 transition-bg duration-200 ease-in-out"
+          className="mt-7 p-2 bg-ship-cove-500 rounded-sm text-white font-bold hover:bg-ship-cove-700 transition-bg duration-200 ease-in-out cursor-pointer"
           type="submit"
         />
       </form>
