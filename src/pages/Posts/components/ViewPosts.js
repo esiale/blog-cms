@@ -30,7 +30,7 @@ const ViewPosts = () => {
 
   return (
     <div>
-      <div className="text-lg text-ship-cove-800 ml-2">Drafts:</div>
+      <div className="text-lg text-ship-cove-800 ml-2 mb-1">Drafts:</div>
       {!drafts.length ? (
         <div className="ml-4">Draft list is empty.</div>
       ) : (
@@ -40,7 +40,7 @@ const ViewPosts = () => {
           ))}
         </div>
       )}
-      <div className="text-lg text-ship-cove-800 ml-2">Posts:</div>
+      <div className="text-lg text-ship-cove-800 ml-2 mb-1 mt-4">Posts:</div>
       {!posts.length ? (
         <div className="ml-4">Post list is empty.</div>
       ) : (

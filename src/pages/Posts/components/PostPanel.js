@@ -15,7 +15,9 @@ const PostPanel = (props) => {
         <div className="text-sm">id: {post._id}</div>
       </div>
       <div className="flex gap-1 justify-end sm:col-start-2 sm:self-end sm:justify-self-end">
-        <button className="btn-hover w-24">Publish</button>
+        <button className="btn-hover w-24">
+          {post.published ? 'Unpublish' : 'Publish'}
+        </button>
         <button className="btn-hover w-24">Edit</button>
         <button className="btn-hover w-24">Delete</button>
       </div>
