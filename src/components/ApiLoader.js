@@ -1,9 +1,9 @@
-import useInterceptAxiosErrors from '../common/hooks/useInterceptAxiosErrors';
+import useInterceptAxios from '../common/hooks/useInterceptAxios';
 import Portal from './Portal';
 import { useState, useEffect } from 'react';
 
 const ApiLoader = () => {
-  const [loading] = useInterceptAxiosErrors();
+  const loading = useInterceptAxios();
   const [show, setShow] = useState(false);
 
   useEffect(() => {

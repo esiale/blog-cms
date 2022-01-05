@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { ax } from '../config/axios/axiosConfig';
 import useModal from './useModal';
 
-const useInterceptAxiosErrors = () => {
+const useInterceptAxios = () => {
   const [counter, setCounter] = useState(0);
   const { addMessage } = useModal();
 
@@ -69,7 +69,7 @@ const useInterceptAxiosErrors = () => {
       ax.interceptors.response.eject(resInterceptor);
     };
   }, [interceptors]);
-  return [counter > 0];
+  return counter > 0;
 };
 
-export default useInterceptAxiosErrors;
+export default useInterceptAxios;

@@ -2,7 +2,7 @@ import format from 'date-fns/format';
 import { v4 as uuidv4 } from 'uuid';
 
 const PostPanel = (props) => {
-  const { post } = props;
+  const { post, publishPost } = props;
   return (
     <div
       key={uuidv4()}
@@ -15,7 +15,10 @@ const PostPanel = (props) => {
         <div className="text-sm">id: {post._id}</div>
       </div>
       <div className="flex gap-1 justify-end sm:col-start-2 sm:self-end sm:justify-self-end">
-        <button className="btn-hover w-24">
+        <button
+          className="btn-hover w-24"
+          onClick={() => publishPost(post._id, post.published)}
+        >
           {post.published ? 'Unpublish' : 'Publish'}
         </button>
         <button className="btn-hover w-24">Edit</button>

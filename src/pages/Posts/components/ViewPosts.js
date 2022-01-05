@@ -5,16 +5,33 @@ import { useState, useEffect } from 'react';
 
 const ViewPosts = () => {
   const { authState } = useAuth();
+  const [loadPosts, setLoadPosts] = useState(true);
   const [posts, setPosts] = useState([]);
   const [drafts, setDrafts] = useState([]);
 
+  const publishPost = async (postId, boolean) => {
+    try {
+      await ax.put(`/posts/${postId}`, {
+        published: !boolean,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    setLoadPosts(true);
+  };
+
   useEffect(() => {
+    if (!loadPosts) return;
     const fetchPosts = async () => {
       let response;
-      if (authState.role === 'admin') {
-        response = await ax.get('/posts');
-      } else {
-        response = await ax.get(`/posts?author=${authState.user._id}`);
+      try {
+        if (authState.role === 'admin') {
+          response = await ax.get('/posts');
+        } else {
+          response = await ax.get(`/posts?author=${authState.user._id}`);
+        }
+      } catch (err) {
+        console.error(err);
       }
       const publishedPosts = response.data.posts.filter(
         (post) => post.published
@@ -26,7 +43,8 @@ const ViewPosts = () => {
       setDrafts(unpublishedPosts);
     };
     fetchPosts();
-  }, [authState]);
+    setLoadPosts(false);
+  }, [authState, loadPosts]);
 
   return (
     <div>
@@ -36,7 +54,7 @@ const ViewPosts = () => {
       ) : (
         <div className="flex flex-col gap-2 justify-center">
           {drafts.map((draft) => (
-            <PostPanel post={draft} />
+            <PostPanel post={draft} publishPost={publishPost} />
           ))}
         </div>
       )}
@@ -46,7 +64,7 @@ const ViewPosts = () => {
       ) : (
         <div className="flex flex-col gap-2 justify-center">
           {posts.map((post) => (
-            <PostPanel post={post} />
+            <PostPanel post={post} publishPost={publishPost} />
           ))}
         </div>
       )}
