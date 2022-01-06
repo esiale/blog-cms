@@ -2,14 +2,19 @@ import Portal from './Portal';
 import tickIcon from '../images/tick.png';
 import useModal from '../common/hooks/useModal';
 import alertIcon from '../images/alert.png';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 
 const Notification = () => {
   const { message, removeMessage } = useModal();
   const handleClick = () => removeMessage();
 
-  const messageRef = useRef('');
+  const [messageToDisplay, setMessageToDisplay] = useState({});
+
+  useEffect(() => {
+    if (!message) return;
+    setMessageToDisplay(message);
+  }, [message]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -17,10 +22,6 @@ const Notification = () => {
     }, 3000);
     return () => clearTimeout(timeout);
   });
-
-  useEffect(() => {
-    messageRef.current = message;
-  }, [message]);
 
   return (
     <Portal>
@@ -34,8 +35,7 @@ const Notification = () => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        {message?.type === 'success' ||
-        messageRef.current?.type === 'success' ? (
+        {messageToDisplay.type === 'success' ? (
           <div className="flex items-center self-start bg-green-600 w-full px-4 py-1.5 text-white font-bold rounded-t gap-2">
             <img className="w-8 h-8" src={tickIcon} alt="Tick icon" />
             Success!
@@ -47,7 +47,7 @@ const Notification = () => {
           </div>
         )}
         <div className="bg-white w-full px-4 py-4 text-center">
-          {message?.message ?? messageRef.current?.message}
+          {messageToDisplay.message}
         </div>
         <button
           className="cursor-pointer w-full px-4 py-1.5 bg-gray-100"
