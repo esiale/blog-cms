@@ -3,6 +3,7 @@ import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
 import CropImage from './CropImage';
 import processFileUpload from '../../../common/utils/uploadImageUtils';
+import { useParams } from 'react-router-dom';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -14,17 +15,10 @@ const NewPost = () => {
   const [imageData, setImageData] = useState(null);
   const [showCropImage, setShowCropImage] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const { postId } = useParams();
   const { addMessage } = useModal();
   const { authState } = useAuth();
   const breakpoint = 1024;
-
-  useEffect(() => {
-    const handleResizeWindow = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResizeWindow);
-    return () => {
-      window.removeEventListener('resize', handleResizeWindow);
-    };
-  }, []);
 
   const validatePost = () => {
     if (!title.trim().length || !body.trim().length) {
@@ -40,17 +34,39 @@ const NewPost = () => {
 
   const saveAsDraft = async () => {
     if (!validatePost()) return;
-    try {
-      const location = await processFileUpload(imageData.image);
-      await ax.post('/posts/', {
-        author: authState.user._id,
-        title: title,
-        body: body,
-        imageUrl: location,
-      });
-      addMessage({ type: 'success', message: 'Your draft has been saved.' });
-    } catch (err) {
-      console.error(err);
+    if (postId) {
+      try {
+        const response = await ax.get(`/posts/${postId}`);
+        const updatedPost = {
+          ...(response.data.title !== title || { title }),
+          ...(response.data.body !== body || { body }),
+          ...(imageData.image.search('blob:') !== -1 || {
+            imageUrl: await processFileUpload(imageData.image),
+          }),
+        };
+        if (Object.keys(updatedPost).length === 0)
+          return addMessage({
+            type: 'error',
+            message: 'No changes were made.',
+          });
+        await ax.put(`/posts/${postId}`, updatedPost);
+        addMessage({ type: 'success', message: 'Your post has been updated.' });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      try {
+        const location = await processFileUpload(imageData.image);
+        await ax.post('/posts/', {
+          author: authState.user._id,
+          title: title,
+          body: body,
+          imageUrl: location,
+        });
+        addMessage({ type: 'success', message: 'Your draft has been saved.' });
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -95,6 +111,31 @@ const NewPost = () => {
     setShowPreview(false);
     setImageData(null);
   };
+
+  const resetForm = () => {
+    setTitle('');
+    setBody('');
+    setImageData(null);
+  };
+
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!postId) return resetForm();
+    const fetchPost = async (postId) => {
+      const response = await ax.get(`/posts/${postId}`);
+      setTitle(response.data.title);
+      setBody(response.data.body);
+      setImageData({ image: response.data.imageUrl });
+    };
+    fetchPost(postId);
+  }, [postId]);
 
   if (showPreview)
     return (
@@ -175,7 +216,7 @@ const NewPost = () => {
       )}
       <div className="flex gap-2 my-4">
         <button onClick={saveAsDraft} className={'btn-hover w-32'}>
-          Save as a draft
+          {postId ? 'Update Post' : 'Save as a draft'}
         </button>
         <input
           type="file"

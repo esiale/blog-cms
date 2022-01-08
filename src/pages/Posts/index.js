@@ -7,6 +7,7 @@ const Posts = () => {
     <Routes>
       <Route path="" element={<ViewPosts />} />
       <Route path="new" element={<NewPost />} />
+      <Route path="new/:postId" element={<NewPost />} />
     </Routes>
   );
 };

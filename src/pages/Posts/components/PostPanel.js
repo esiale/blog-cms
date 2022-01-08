@@ -1,4 +1,5 @@
 import format from 'date-fns/format';
+import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 const PostPanel = (props) => {
@@ -21,7 +22,9 @@ const PostPanel = (props) => {
         >
           {post.published ? 'Unpublish' : 'Publish'}
         </button>
-        <button className="btn-hover w-24">Edit</button>
+        <Link to={`new/${post._id}`}>
+          <button className="btn-hover w-24">Edit</button>
+        </Link>
         <button className="btn-hover w-24">Delete</button>
       </div>
     </div>
