@@ -41,11 +41,15 @@ const convertBlobUrlToFile = async (file) => {
 };
 
 const processFileUpload = async (file) => {
-  const fileToUpload = await convertBlobUrlToFile(file);
-  const presignedPostData = await getPresignedPostData(fileToUpload);
-  const response = await uploadFileToS3(presignedPostData, fileToUpload);
-  const location = getLocationFromXmlResponse(response);
-  return location;
+  try {
+    const fileToUpload = await convertBlobUrlToFile(file);
+    const presignedPostData = await getPresignedPostData(fileToUpload);
+    const response = await uploadFileToS3(presignedPostData, fileToUpload);
+    const location = getLocationFromXmlResponse(response);
+    return location;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default processFileUpload;

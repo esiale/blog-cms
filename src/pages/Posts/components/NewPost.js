@@ -3,7 +3,7 @@ import useModal from '../../../common/hooks/useModal';
 import useAuth from '../../../common/hooks/useAuth';
 import CropImage from './CropImage';
 import processFileUpload from '../../../common/utils/uploadImageUtils';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -19,6 +19,7 @@ const NewPost = () => {
   const { addMessage } = useModal();
   const { authState } = useAuth();
   const breakpoint = 1024;
+  const navigate = useNavigate();
 
   const validatePost = () => {
     if (!title.trim().length || !body.trim().length) {
@@ -32,15 +33,15 @@ const NewPost = () => {
     }
   };
 
-  const saveAsDraft = async () => {
+  const savePost = async () => {
     if (!validatePost()) return;
     if (postId) {
       try {
         const response = await ax.get(`/posts/${postId}`);
         const updatedPost = {
-          ...(response.data.title !== title || { title }),
-          ...(response.data.body !== body || { body }),
-          ...(imageData.image.search('blob:') !== -1 || {
+          ...(response.data.title === title || { title }),
+          ...(response.data.body === body || { body }),
+          ...(imageData.image.search('blob:') === -1 || {
             imageUrl: await processFileUpload(imageData.image),
           }),
         };
@@ -57,13 +58,14 @@ const NewPost = () => {
     } else {
       try {
         const location = await processFileUpload(imageData.image);
-        await ax.post('/posts/', {
+        const response = await ax.post('/posts/', {
           author: authState.user._id,
           title: title,
           body: body,
           imageUrl: location,
         });
         addMessage({ type: 'success', message: 'Your draft has been saved.' });
+        navigate(`/posts/new/${response.data._id}`);
       } catch (err) {
         console.error(err);
       }
@@ -215,7 +217,7 @@ const NewPost = () => {
         <MDEditor.Markdown source={body} />
       )}
       <div className="flex gap-2 my-4">
-        <button onClick={saveAsDraft} className={'btn-hover w-32'}>
+        <button onClick={savePost} className={'btn-hover w-32'}>
           {postId ? 'Update Post' : 'Save as a draft'}
         </button>
         <input
