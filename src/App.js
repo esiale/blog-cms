@@ -8,12 +8,12 @@ import Layout from './pages/Layout';
 import uniqid from 'uniqid';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './common/providers/AuthProvider';
-import { ModalProvider } from './common/providers/ModalProvider';
+import { NotificationProvider } from './common/providers/NotificationProvider';
 
 function App() {
   return (
     <AuthProvider>
-      <ModalProvider>
+      <NotificationProvider>
         <ApiLoader />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -26,7 +26,7 @@ function App() {
           </Route>
         </Routes>
         <Notification />
-      </ModalProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

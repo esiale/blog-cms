@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 
-const ModalContext = React.createContext({
+const NotificationContext = React.createContext({
   message: null,
   addMessage: () => {},
   removeMessage: () => {},
 });
 
-const ModalProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
   const [message, setMessage] = useState(null);
   const removeMessage = () => setMessage(null);
   const addMessage = (message) => setMessage(message);
@@ -21,10 +21,10 @@ const ModalProvider = ({ children }) => {
   );
 
   return (
-    <ModalContext.Provider value={contextValue}>
+    <NotificationContext.Provider value={contextValue}>
       {children}
-    </ModalContext.Provider>
+    </NotificationContext.Provider>
   );
 };
 
-export { ModalProvider, ModalContext };
+export { NotificationProvider, NotificationContext };

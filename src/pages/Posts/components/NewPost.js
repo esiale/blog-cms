@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor';
-import useModal from '../../../common/hooks/useModal';
+import useNotification from '../../../common/hooks/useNotification';
 import useAuth from '../../../common/hooks/useAuth';
 import CropImage from './CropImage';
 import processFileUpload from '../../../common/utils/uploadImageUtils';
@@ -16,7 +16,7 @@ const NewPost = () => {
   const [showCropImage, setShowCropImage] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const { postId } = useParams();
-  const { addMessage } = useModal();
+  const { addMessage } = useNotification();
   const { authState } = useAuth();
   const breakpoint = 1024;
   const navigate = useNavigate();

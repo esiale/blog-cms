@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { ax } from '../config/axios/axiosConfig';
-import useModal from './useModal';
+import useNotification from './useNotification';
 
 const useInterceptAxios = () => {
   const [counter, setCounter] = useState(0);
-  const { addMessage } = useModal();
+  const { addMessage } = useNotification();
 
   const interceptors = useMemo(() => {
     const inc = () => setCounter((counter) => counter + 1);

@@ -1,12 +1,12 @@
 import Portal from './Portal';
 import tickIcon from '../images/tick.png';
-import useModal from '../common/hooks/useModal';
+import useNotification from '../common/hooks/useNotification';
 import alertIcon from '../images/alert.png';
 import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 
 const Notification = () => {
-  const { message, removeMessage } = useModal();
+  const { message, removeMessage } = useNotification();
   const handleClick = () => removeMessage();
 
   const [messageToDisplay, setMessageToDisplay] = useState({});
