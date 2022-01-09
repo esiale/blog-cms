@@ -1,5 +1,6 @@
 import useAuth from '../../../common/hooks/useAuth';
 import PostPanel from './PostPanel';
+import { v4 as uuidv4 } from 'uuid';
 import { ax } from '../../../common/config/axios/axiosConfig';
 import { useState, useEffect } from 'react';
 
@@ -8,17 +9,6 @@ const ViewPosts = () => {
   const [loadPosts, setLoadPosts] = useState(true);
   const [posts, setPosts] = useState([]);
   const [drafts, setDrafts] = useState([]);
-
-  const publishPost = async (postId, boolean) => {
-    try {
-      await ax.put(`/posts/${postId}`, {
-        published: !boolean,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-    setLoadPosts(true);
-  };
 
   useEffect(() => {
     if (!loadPosts) return;
@@ -54,7 +44,11 @@ const ViewPosts = () => {
       ) : (
         <div className="flex flex-col gap-2 justify-center">
           {drafts.map((draft) => (
-            <PostPanel post={draft} publishPost={publishPost} />
+            <PostPanel
+              key={uuidv4()}
+              post={draft}
+              setLoadPosts={setLoadPosts}
+            />
           ))}
         </div>
       )}
@@ -64,7 +58,7 @@ const ViewPosts = () => {
       ) : (
         <div className="flex flex-col gap-2 justify-center">
           {posts.map((post) => (
-            <PostPanel post={post} publishPost={publishPost} />
+            <PostPanel key={uuidv4()} post={post} setLoadPosts={setLoadPosts} />
           ))}
         </div>
       )}
